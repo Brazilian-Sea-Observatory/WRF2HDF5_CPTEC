@@ -3,7 +3,7 @@ Tool to download and/or convert WRF files from CPTEC/INPE to HDF5 MOHID format.
 
 Requirements for Linux:
 * Python 3
-* wgib2 (https://anaconda.org/conda-forge/wgrib2)
+* wgrib2 (https://anaconda.org/conda-forge/wgrib2)
 * grib files and their wgrib inventory on an http server
 * get_inv.pl
 * get_grib.pl
