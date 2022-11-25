@@ -4,18 +4,18 @@ url="http://ftp.cptec.inpe.br/modelos/tempo/WRF/ams_07km/brutos"
 file_initial_name = "WRF_cpt_07KM_"
 
 dirpath = os.getcwd()
-download_dir = (dirpath+"\Download")
-ConvertToNetcdf_dir = (dirpath+"\ConvertToNetcdf")
-ConvertToHdf5_dir = (dirpath+"\ConvertToHdf5")
-backup_path =	(dirpath+"\Backup")
+download_dir = (dirpath+"/Download")
+ConvertToNetcdf_dir = (dirpath+"/ConvertToNetcdf")
+ConvertToHdf5_dir = (dirpath+"/ConvertToHdf5")
+backup_path =	(dirpath+"/Backup")
 
 forecast_mode = 1
 #Número de dias a partir da data atual se forecast_mode = 0
 number_of_runs = 2
 
 #Data de início e fim se forecast_mode = 0
-start = datetime.date(2022,11,27)
-end = datetime.date(2022,11,28)
+start = datetime.date(2022,11,24)
+end = datetime.date(2022,11,25)
 
 download = 1
 #Tempo de espera para uma nova tentativa de download do arquivo (em segundos)
