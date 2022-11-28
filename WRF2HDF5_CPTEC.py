@@ -24,8 +24,11 @@ def download_file(path,filename):
         while not f_exists or f_size < min_file_size:
 
                 print("Downloading: ", url_grb)
-                #out = os.system('PERL get_inv.pl '+url_inv+'|egrep "(:TMP:2 m above|:UGRD:10 m above|:VGRD:10 m above|:RH:2 m above|:PRMSL:|:LAND:|:TCDC:entire atmosphere|:DLWRF:surface|:DSWRF:surface|:HPBL:surface|:ALBDO:surface)" | PERL get_grib.pl '+ url_grb + " " + filename + ".grib2")
-                out = os.system(download_dir+ '/get_inv.pl '+url_inv+'|egrep "(:TMP:2 m above|:UGRD:10 m above|:VGRD:10 m above|:RH:2 m above|:PRMSL:|:LAND:|:TCDC:entire atmosphere|:DLWRF:surface|:DSWRF:surface|:HPBL:surface|:ALBDO:surface)" |'+ download_dir + '/get_grib.pl '+ url_grb + " " + filename + ".grib2")                
+                #Windows
+                out = os.system('PERL get_inv.pl '+url_inv+'|egrep "(:TMP:2 m above|:UGRD:10 m above|:VGRD:10 m above|:RH:2 m above|:PRMSL:|:LAND:|:TCDC:entire atmosphere|:DLWRF:surface|:DSWRF:surface|:HPBL:surface|:ALBDO:surface)" | PERL get_grib.pl '+ url_grb + " " + filename + ".grib2")
+                
+                #Linux
+                #out = os.system(download_dir+ '/get_inv.pl '+url_inv+'|egrep "(:TMP:2 m above|:UGRD:10 m above|:VGRD:10 m above|:RH:2 m above|:PRMSL:|:LAND:|:TCDC:entire atmosphere|:DLWRF:surface|:DSWRF:surface|:HPBL:surface|:ALBDO:surface)" |'+ download_dir + '/get_grib.pl '+ url_grb + " " + filename + ".grib2")                
 
                 if out != 0: 
                         print ("File not found")
@@ -151,7 +154,7 @@ if ConvertToHdf5 == 1:
                 download_date = initial_date + datetime.timedelta(days = run)
                 for hour in range (0,26):
                 
-                        if hour == 0:
+                        if run == 0 and hour == 0:
                                 download_date_before = download_date + datetime.timedelta(days = -1)
                                 download_hour = download_date_before + datetime.timedelta(hours = 23)
                                 
@@ -164,14 +167,35 @@ if ConvertToHdf5 == 1:
                         else:
                                 if forecast_mode == 1: 
                                         fcst_hour = hour + run*24
-                                        download_hour = initial_date + datetime.timedelta(hours = fcst_hour)
-                                        filename = file_initial_name + str(initial_date.strftime("%Y%m%d")) + "00_" + str(download_hour.strftime("%Y%m%d%H"))+".grib2"
-                                        copy_file(filename)
+                                        if hour == 0:
+                                                download_hour = initial_date + datetime.timedelta(hours = fcst_hour-1)
+                                                filename = file_initial_name + str(initial_date.strftime("%Y%m%d")) + "00_" + str(download_hour.strftime("%Y%m%d%H"))+".grib2"
+                                                copy_file(filename)
+                                                
+                                                download_hour = initial_date + datetime.timedelta(hours = fcst_hour)
+                                                filename = file_initial_name + str(initial_date.strftime("%Y%m%d")) + "00_" + str(download_hour.strftime("%Y%m%d%H"))+".grib2"
+                                                copy_file(filename)
+                                        else:
+                                                
+                                                download_hour = initial_date + datetime.timedelta(hours = fcst_hour)
+                                                filename = file_initial_name + str(initial_date.strftime("%Y%m%d")) + "00_" + str(download_hour.strftime("%Y%m%d%H"))+".grib2"
+                                                copy_file(filename)
                                         
                                 else:
-                                        download_hour = download_date + datetime.timedelta(hours = hour)
-                                        filename = file_initial_name + str(download_date.strftime("%Y%m%d")) + "00_" + str(download_hour.strftime("%Y%m%d%H"))+".grib2"
-                                        copy_file(filename)
+                                            if hour == 0:
+                                                    download_date_before = download_date + datetime.timedelta(days = -1)
+                                                    download_hour = download_date_before + datetime.timedelta(hours = 23)
+                                
+                                                    filename = file_initial_name + str(download_date_before.strftime("%Y%m%d")) + "00_" + str(download_hour.strftime("%Y%m%d%H")) + ".grib2"
+                                                    copy_file(filename)
+                                                    
+                                                    filename = file_initial_name + str(download_date_before.strftime("%Y%m%d")) + "00_" + str(download_date.strftime("%Y%m%d")) + "00" + ".grib2"
+                                                    copy_file(filename)
+                                                    
+                                            else:
+                                                    download_hour = download_date + datetime.timedelta(hours = hour)
+                                                    filename = file_initial_name + str(download_date.strftime("%Y%m%d")) + "00_" + str(download_hour.strftime("%Y%m%d%H"))+".grib2"
+                                                    copy_file(filename)
                 
                 if f_missing == False:
                         os.chdir(ConvertToNetcdf_dir)
@@ -187,9 +211,6 @@ if ConvertToHdf5 == 1:
                         
                         os.system("python3 "+ConvertToHdf5_dir+"/Convert2HDF5.py")
                         
-                        #if forecast_mode == 1:
-                                #output_dir = backup_path
-                        #else:
                         start_date = initial_date + datetime.timedelta(days = run)
                         end_date = start_date + datetime.timedelta(days = 1)
                         output_dir = backup_path+"//"+str(start_date.strftime("%Y%m%d")) + "_" + str(end_date.strftime("%Y%m%d"))
