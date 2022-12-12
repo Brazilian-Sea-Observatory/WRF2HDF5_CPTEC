@@ -78,13 +78,12 @@ UNITS : w/m2
 DIM : 2
 <<end_field>>
 
-!<<begin_field>>
-NETCDF_NAME : PRATE_surface
+<<begin_field>>
+NETCDF_NAME : APCP_surface
 NAME : precipitation
-UNITS : mm/day
+UNITS : mm
 DIM : 2
-MULTIPLY_FACTOR : 86400
-!<<end_field>>
+<<end_field>>
 
 <<begin_field>>
 NETCDF_NAME : HPBL_surface

@@ -4,7 +4,9 @@ import glob
 files = glob.glob("*.grib2")
 files.sort()
 outputname = "wrf.nc"
-wgrib2 = "/home/mohid/miniconda3/bin/wgrib2"
+
+#Define the entire path to wgrib2 to avoid problems with cron in Linux
+wgrib2 = "wgrib2"
 
 for filename in files:
    
@@ -19,4 +21,5 @@ for filename in files:
     subprocess.run (wgrib2 +' -append -match ":DSWRF:surface" ' + filename +  ' -netcdf ' + outputname, shell=True)
     subprocess.run (wgrib2 +' -append -match ":HPBL:surface" ' + filename +  ' -netcdf ' + outputname, shell=True)
     subprocess.run (wgrib2 +' -append -match ":ALBDO:surface" ' + filename +  ' -netcdf ' + outputname, shell=True)
+    subprocess.run (wgrib2 +' -append -match ":APCP:surface" ' + filename +  ' -netcdf ' + outputname, shell=True)
 	 
