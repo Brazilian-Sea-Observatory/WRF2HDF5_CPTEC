@@ -45,7 +45,8 @@ def download_file(path,filename):
                                 break #encerra o loop
                 
                 f_exists = os.path.exists(filename + '.grib2')
-                f_size = os.path.getsize(filename + '.grib2')
+                if f_exists:
+                        f_size = os.path.getsize(filename + '.grib2')
 #####################################################
 def copy_file(filename):
         global f_missing
